@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import joblib
+import numpy as np
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('file_paths', nargs='+')
+parser.add_argument('--dim', type=str, default='25x25x3')
+parser.add_argument('-n', action='store_true')
+parser.add_argument('--verbose', action='store_true')
+
+args = parser.parse_args()
+dims = tuple(map(int, args.dim.split('x')))
+n = args.n
+verbose = args.verbose
+
+file_paths = args.file_paths
+
+for file_path in file_paths:
+    img = joblib.load(file_path)
+
+    if verbose:
+        text = file_path + ' ' + 'x'.join(str(x) for x in img.shape)
+    else:
+        text = file_path
+
+    if len(img.shape) != len(dims):
+        if n:
+            print(text)
+
+        continue
+
+    if img.shape[0] != dims[0] or img.shape[1] != dims[1] or img.shape[2] != dims[2]:
+        if n:
+            print(text)
+        continue
+
+    if not n:
+        print(text)
