@@ -27,13 +27,7 @@ for file_path in file_paths:
     else:
         text = file_path
 
-    if len(img.shape) != len(dims):
-        if n:
-            print(text)
-
-        continue
-
-    if img.shape[0] != dims[0] or img.shape[1] != dims[1] or img.shape[2] != dims[2]:
+    if len(img.shape) != len(dims) or img.shape[0] != dims[0] or img.shape[1] != dims[1] or img.shape[2] != dims[2]:
         if n:
             print(text)
         continue
