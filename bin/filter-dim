@@ -4,10 +4,11 @@ import argparse
 import os
 import joblib
 import numpy as np
+import sys
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('file_paths', nargs='+')
+parser.add_argument('file_paths', nargs='*')
 parser.add_argument('--dim', type=str, default='25x25x3')
 parser.add_argument('-n', action='store_true')
 parser.add_argument('--verbose', action='store_true')
@@ -19,7 +20,7 @@ verbose = args.verbose
 
 file_paths = args.file_paths
 
-for file_path in file_paths:
+def process(file_path):
     img = joblib.load(file_path)
 
     if verbose:
@@ -30,7 +31,14 @@ for file_path in file_paths:
     if len(img.shape) != len(dims) or img.shape[0] != dims[0] or img.shape[1] != dims[1] or img.shape[2] != dims[2]:
         if n:
             print(text)
-        continue
+        return
 
     if not n:
         print(text)
+
+if file_paths == []:
+    for file_path in sys.stdin.readlines():
+        process(file_path.strip())
+else:
+    for file_path in file_paths:
+        process(file_path)
